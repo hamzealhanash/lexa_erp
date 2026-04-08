@@ -1,0 +1,371 @@
+{
+  "profile": {
+    "en": "Profile",
+    "ar": "الملف الشخصي"
+  },
+  "settings": {
+    "en": "Settings",
+    "ar": "الإعدادات"
+  },
+  "logout": {
+    "en": "Logout",
+    "ar": "تسجيل خروج"
+  },
+  "bills": {
+    "en": "Bills",
+    "ar": "الفواتير"
+  },
+  "collection": {
+    "en": "Collection",
+    "ar": "الجباية"
+  },
+  "records": {
+    "en": "Records",
+    "ar": "السجلات"
+  },
+  "currency": {
+    "en": "SYP",
+    "ar": "ل.س"
+  },
+  "billsEntry": {
+    "en": "Bills Entry",
+    "ar": "إدخال الفواتير"
+  },
+  "saveBill": {
+    "en": "Save Bill",
+    "ar": "حفظ الفاتورة"
+  },
+  "billId": {
+    "en": "Bill ID",
+    "ar": "رقم الفاتورة"
+  },
+  "issueDate": {
+    "en": "Issue Date",
+    "ar": "تاريخ الفاتورة"
+  },
+  "store": {
+    "en": "Store",
+    "ar": "المتجر"
+  },
+  "location": {
+    "en": "Location",
+    "ar": "الموقع"
+  },
+  "totalQuantity": {
+    "en": "Total Quantity",
+    "ar": "الكمية الإجمالية"
+  },
+  "grandTotal": {
+    "en": "Grand Total",
+    "ar": "المبلغ الإجمالي"
+  },
+  "seller": {
+    "en": "Seller",
+    "ar": "البائع"
+  },
+  "item": {
+    "en": "Item",
+    "ar": "العنصر"
+  },
+  "quantity": {
+    "en": "Quantity",
+    "ar": "الكمية"
+  },
+  "price": {
+    "en": "Price",
+    "ar": "السعر"
+  },
+  "totalPrice": {
+    "en": "Total Price",
+    "ar": "السعر الإجمالي"
+  },
+  "action": {
+    "en": "Action",
+    "ar": "إجراء"
+  },
+  "addItem": {
+    "en": "Add Item",
+    "ar": "إضافة عنصر"
+  },
+  "enterMainBillInfo": {
+    "en": "Enter the main bill information",
+    "ar": "أدخل معلومات الفاتورة الرئيسية"
+  },
+  "addMultipleItems": {
+    "en": "Add multiple items for this bill",
+    "ar": "أضف عناصر متعددة لهذه الفاتورة"
+  },
+  "totalItems": {
+    "en": "Total Items",
+    "ar": "إجمالي العناصر"
+  },
+  "collectionEntry": {
+    "en": "Collection Entry",
+    "ar": "إدخال الجباية"
+  },
+  "saveCollection": {
+    "en": "Save Collection",
+    "ar": "حفظ الجباية"
+  },
+  "companyName": {
+    "en": "Company",
+    "ar": "الشركة المنتجة"
+  },
+  "amount": {
+    "en": "Amount",
+    "ar": "المبلغ"
+  },
+  "totalAmount": {
+    "en": "Total Amount",
+    "ar": "المبلغ الإجمالي"
+  },
+  "recordsViewOnly": {
+    "en": "Records (View Only)",
+    "ar": "السجلات (للعرض فقط)"
+  },
+  "completeRecord": {
+    "en": "Complete record of all bills and their items",
+    "ar": "سجل كامل لجميع الفواتير وعناصرها"
+  },
+  "noResults": {
+    "en": "No results.",
+    "ar": "لا يوجد نتائج."
+  },
+  "enterCollectionInfo": {
+    "en": "Enter collection information",
+    "ar": "أدخل معلومات الجباية"
+  },
+  "collected": {
+    "en": "Collected",
+    "ar": "المحصل"
+  },
+  "totalLeft": {
+    "en": "Total Left",
+    "ar": "المتبقي الإجمالي"
+  },
+  "collectionStatus": {
+    "en": "Collection Status",
+    "ar": "حالة الجباية"
+  },
+  "deliveryStatus": {
+    "en": "Delivery Status",
+    "ar": "حالة التسليم"
+  },
+  "gotCollected": {
+    "en": "Got Collected",
+    "ar": "تم الجباية"
+  },
+  "gotDelivery": {
+    "en": "Got Delivery",
+    "ar": "تم التسليم"
+  },
+  "pending": {
+    "en": "Pending",
+    "ar": "غير مسلم"
+  },
+  "due": {
+    "en": "Due",
+    "ar": "غير محصل"
+  },
+  "companySales": {
+    "en": "Company Sales",
+    "ar": "مبيعات الشركات"
+  },
+  "itemSales": {
+    "en": "Item Sales",
+    "ar": "مبيعات العناصر"
+  },
+  "totalRevenue": {
+    "en": "Total Revenue",
+    "ar": "إجمالي الإيرادات"
+  },
+  "note": {
+    "en": "Note",
+    "ar": "ملاحظة"
+  },
+  "savingBill": {
+    "en": "Saving bill...",
+    "ar": "جاري حفظ الفاتورة..."
+  },
+  "billSavedSuccess": {
+    "en": "Bill saved successfully!",
+    "ar": "تم حفظ الفاتورة بنجاح!"
+  },
+  "billSavedError": {
+    "en": "Error saving bill.",
+    "ar": "خطأ في حفظ الفاتورة."
+  },
+  "noItems": {
+    "en": "Cannot save an empty bill.",
+    "ar": "لا يمكن حفظ فاتورة فارغة."
+  },
+  "savingCollection": {
+    "en": "Saving collection...",
+    "ar": "جاري حفظ الجباية..."
+  },
+  "collectionSavedSuccess": {
+    "en": "Collection saved successfully!",
+    "ar": "تم حفظ الجباية بنجاح!"
+  },
+  "collectionSavedError": {
+    "en": "Error saving collection.",
+    "ar": "خطأ في حفظ الجباية."
+  },
+  "enterAllInfo": {
+    "en": "Please select a bill and enter the amount.",
+    "ar": "يرجى اختيار فاتورة وإدخال المبلغ."
+  },
+  "daily": {
+    "en": "Daily",
+    "ar": "يومي"
+  },
+  "weekly": {
+    "en": "Weekly",
+    "ar": "أسبوعي"
+  },
+  "monthly": {
+    "en": "Monthly",
+    "ar": "شهري"
+  },
+  "companySalesSummary": {
+    "en": "Company sales summary by period.",
+    "ar": "ملخص مبيعات الشركات بحسب الفترة."
+  },
+  "period": {
+    "en": "Period",
+    "ar": "الفترة"
+  },
+  "startDate": {
+    "en": "From",
+    "ar": "من"
+  },
+  "endDate": {
+    "en": "To",
+    "ar": "إلى"
+  },
+  "itemSalesPerformance": {
+    "en": "Item sales performance for specific period.",
+    "ar": "أداء مبيعات العناصر لفترة محددة."
+  },
+  "catalog": {
+    "en": "Catalog",
+    "ar": "الكتالوج"
+  },
+  "companies": {
+    "en": "Companies",
+    "ar": "الشركات"
+  },
+  "items": {
+    "en": "Items",
+    "ar": "العناصر"
+  },
+  "addNewCompany": {
+    "en": "Add new company",
+    "ar": "إضافة شركة جديدة"
+  },
+  "addCompany": {
+    "en": "Add Company",
+    "ar": "إضافة شركة"
+  },
+  "addNewItem": {
+    "en": "Add new item",
+    "ar": "إضافة عنصر جديد"
+  },
+  "contract": {
+    "en": "Contract",
+    "ar": "العقد"
+  },
+  "selectContract": {
+    "en": "Select contract...",
+    "ar": "اختر العقد..."
+  },
+  "selectCompany": {
+    "en": "Select company...",
+    "ar": "اختر الشركة..."
+  },
+  "extraServices": {
+    "en": "Extra Services",
+    "ar": "الخدمات الإضافية"
+  },
+  "invalidPrice": {
+    "en": "Please enter a valid price.",
+    "ar": "يرجى إدخال سعر صحيح."
+  },
+  "enterCompanyName": {
+    "en": "Please enter a company name.",
+    "ar": "يرجى إدخال اسم الشركة."
+  },
+  "enterAllItemInfo": {
+    "en": "Please fill all item fields.",
+    "ar": "يرجى ملء جميع حقول العنصر."
+  },
+  "savingCompany": {
+    "en": "Saving company...",
+    "ar": "جاري حفظ الشركة..."
+  },
+  "companySavedSuccess": {
+    "en": "Company saved!",
+    "ar": "تم حفظ الشركة!"
+  },
+  "companySavedError": {
+    "en": "Error saving company.",
+    "ar": "خطأ في حفظ الشركة."
+  },
+  "deletingCompany": {
+    "en": "Deleting company...",
+    "ar": "جاري حذف الشركة..."
+  },
+  "companyDeletedSuccess": {
+    "en": "Company deleted.",
+    "ar": "تم حذف الشركة."
+  },
+  "companyDeletedError": {
+    "en": "Error deleting company.",
+    "ar": "خطأ في حذف الشركة."
+  },
+  "savingItem": {
+    "en": "Saving item...",
+    "ar": "جاري حفظ العنصر..."
+  },
+  "itemSavedSuccess": {
+    "en": "Item saved!",
+    "ar": "تم حفظ العنصر!"
+  },
+  "itemSavedError": {
+    "en": "Error saving item.",
+    "ar": "خطأ في حفظ العنصر."
+  },
+  "deletingItem": {
+    "en": "Deleting item...",
+    "ar": "جاري حذف العنصر..."
+  },
+  "itemDeletedSuccess": {
+    "en": "Item deleted.",
+    "ar": "تم حذف العنصر."
+  },
+  "itemDeletedError": {
+    "en": "Error deleting item.",
+    "ar": "خطأ في حذف العنصر."
+  },
+  "newContractName": {
+    "en": "New Contract Name",
+    "ar": "اسم العقد الجديد"
+  },
+  "percentage": {
+    "en": "Percentage",
+    "ar": "النسبة"
+  },
+  "enterContractInfo": {
+    "en": "Please enter contract information.",
+    "ar": "يرجى إدخال معلومات العقد."
+  },
+  "other": {
+    "en": "Other",
+    "ar": "أخرى"
+  },
+  "contractName": {
+    "en": "Contract Name",
+    "ar": "اسم العقد"
+  }
+  
+}

@@ -1,0 +1,43 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@/components/*": [
+        "src/frontend/components/*"
+      ],
+      "@/lib/*": [
+        "src/frontend/lib/*"
+      ],
+      "@/assets/*": [
+        "src/frontend/assets/*"
+      ],
+      "@/frontend/*": [
+        "src/frontend/*"
+      ],
+      "@/types": [
+        "src/global-types.d.ts"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "exclude": [
+    "node_modules",
+    "release",
+    "dist",
+    "build",
+    ".spec.ts",
+    ".test.ts",
+    "coverage"
+  ]
+}

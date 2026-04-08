@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/types": ["src/global-types.d.ts"],
+      "@src/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/electron/**/*",
+    "src/backend/**/*"
+  ],
+  "exclude": ["node_modules", "src/frontend"]
+}

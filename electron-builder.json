@@ -1,0 +1,39 @@
+{
+  "appId": "com.lexa.erp",
+  "cscLink": "./cert/code-sign.pfx",
+  "cscKeyPassword": "1234",
+  "files": [
+    "dist/electron",
+    "dist/backend",
+    "dist/frontend",
+    "!node_modules/@tailwindcss/oxide-android-arm64/**",
+    "!node_modules/@tailwindcss/oxide-darwin-arm64/**",
+    "!node_modules/@tailwindcss/oxide-darwin-x64/**",
+    "!node_modules/@tailwindcss/oxide-freebsd-x64/**",
+    "!node_modules/@tailwindcss/oxide-linux-*/**",
+    "!node_modules/@tailwindcss/oxide-wasm32-wasi/**",
+    "!node_modules/@tailwindcss/oxide-win32-arm64-msvc/**",
+    "!node_modules/lightningcss-android-arm64/**",
+    "!node_modules/lightningcss-darwin-*/**",
+    "!node_modules/lightningcss-freebsd-x64/**",
+    "!node_modules/lightningcss-linux-*/**",
+    "!node_modules/lightningcss-win32-arm64-msvc/**"
+  ],
+  "directories": {
+    "output": "release"
+  },
+  "mac": {
+    "target": "dmg"
+  },
+  "win": {
+    "icon": "build/icon.png",
+    "target": [
+      "msi",
+      "portable"
+    ]
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  }
+}
