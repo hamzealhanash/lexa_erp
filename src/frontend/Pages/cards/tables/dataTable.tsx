@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/ui/table"
 import {
     type ColumnDef,
     flexRender,
@@ -9,7 +9,7 @@ import {
     type GroupingState,
     type ExpandedState
 } from "@tanstack/react-table"
-import { useTranslation } from "@/lib/language-context"
+import { useTranslation } from "@lib/language-context"
 import { useState, useRef, useEffect } from "react"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { useVirtualizer } from "@tanstack/react-virtual"
@@ -95,7 +95,7 @@ export default function DataTable<TData, TValue>({ data, columns, groupBy = [] }
                                                         )}
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                         <span className="text-muted-foreground text-xs font-normal bg-primary/10 px-2 py-0.5 rounded-full ml-1">
-                                                            {row.subRows.length} Items
+                                                            {row.subRows.length} {t("items")}
                                                         </span>
                                                     </div>
                                                 ) : cell.getIsAggregated() ? (

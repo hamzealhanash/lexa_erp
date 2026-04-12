@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import type { UserSettings, SettingsContextType } from "@/types"
+import type { UserSettings, SettingsContextType } from "@types"
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
     const [settings, setSettings] = useState<UserSettings>({
         username: "User",
-        theme: "system",
+        theme: "dark",
         language: "en"
     })
     const [isLoading, setIsLoading] = useState(true)
@@ -41,14 +41,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         const root = window.document.documentElement
         const theme = settings.theme
 
-        if (theme === 'system') {
-            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'dark' : 'light'
-            root.classList.remove("light", "dark")
-            root.classList.add(systemTheme)
-        } else {
-            root.classList.remove("light", "dark")
-            root.classList.add(theme)
-        }
+        root.classList.remove("light", "dark")
+        root.classList.add(theme)
     }, [settings.theme])
 
     return (

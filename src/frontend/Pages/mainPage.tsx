@@ -1,9 +1,9 @@
 import { Toaster } from "sonner"
 import { useState, lazy, Suspense, useEffect } from "react"
-import { useSettings } from "../lib/settings-context"
-import { TopBar } from "@/components/ui/custom/topBar"
-import { TabsNav } from "@/components/ui/custom/navBar"
-import { useTranslation, LanguageProvider } from "@/lib/language-context"
+import { useSettings } from "@lib/settings-context"
+import { TopBar } from "@components/ui/custom/topBar"
+import { TabsNav } from "@components/ui/custom/navBar"
+import { useTranslation, LanguageProvider } from "@lib/language-context"
 
 const Bills = lazy(() => import('./cards/bills'))
 const Collection = lazy(() => import('./cards/collection'))

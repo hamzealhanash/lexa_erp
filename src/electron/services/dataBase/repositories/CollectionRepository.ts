@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { Collection, ICollectionRepository } from "@/types";
+import { collection, ICollectionRepository } from "@types";
 
 export class CollectionRepository implements ICollectionRepository {
-    async create(collection: Collection): Promise<number | bigint> {
+    async create(collection: collection): Promise<number | bigint> {
         let storeId = collection.store_id;
 
         // If store_id is missing, try to resolve it from the bill
@@ -23,25 +23,25 @@ export class CollectionRepository implements ICollectionRepository {
             storeId || 1,
             collection.amount_total,
             collection.amount_received,
-            Number(collection.delivery_status),
-            Number(collection.collection_status)
+            collection.delivery_status,
+            collection.collection_status
         );
         return info.lastInsertRowid;
     }
 
-    async getById(id: number): Promise<Collection | undefined> {
-        return getDb().prepare('SELECT * FROM collection WHERE payment_id = ?').get(id) as Collection | undefined;
+    async getById(id: number): Promise<collection | undefined> {
+        return getDb().prepare('SELECT * FROM collection WHERE payment_id = ?').get(id) as collection | undefined;
     }
 
-    async getAll(): Promise<Collection[]> {
-        return getDb().prepare('SELECT * FROM collection').all() as Collection[];
+    async getAll(): Promise<collection[]> {
+        return getDb().prepare('SELECT * FROM collection').all() as collection[];
     }
 
-    async update(id: number, collection: Partial<Collection>): Promise<boolean> {
+    async update(id: number, collection: Partial<collection>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 
-        const editableFields: (keyof Collection)[] = [
+        const editableFields: (keyof collection)[] = [
             'payment_date', 'bill_id', 'store_id', 'amount_total', 'amount_received', 'delivery_status', 'collection_status'
         ];
 

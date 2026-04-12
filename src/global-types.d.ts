@@ -1,59 +1,55 @@
 import { ReactNode } from "react"
 
-// bills table types
-export type itemList = {
-    item_id?: number | string
-    item_name: string
-    company_name?: string
-    quantity: number
-    price: number
-    total_price: number
-    seller: string
-}
 export type item = {
-    item_id: string
+    item_id?: string
     item_name: string
     company_name?: string
     company_id?: number
+    quantity?: number
     price: number
+    total_price?: number
+    seller?: string
 }
+
 export type billRow = {
-    item: itemList;
-    onUpdate: (id: number | string, field: keyof itemList, value: string | number) => void;
+    item: item;
+    onUpdate: (id: number | string, field: keyof item, value: string | number) => void;
     onRemove: (id: number | string) => void;
     canRemove: boolean;
-    t: (key: string) => string;
+    t: (key: TranslationKey) => string;
     isRTL: boolean;
     availableItems: item[];
 }
 
-// collection table types
-export type CollectionEntryType = {
+export type collection = {
     payment_id: number
     payment_date: string
     bill_id: number
     store_id: number
+    store_name?: string
     seller?: string
-    store_name: string
     amount_total: number
     amount_received: number
     amount_remaining: number
     collection_status: boolean
     delivery_status: boolean
 }
+
 export type TabsNavProps = {
     activeTab: string
     onTabChange: (tab: string) => void
 }
 export type bill = {
-    bill_id: number
-    seller: string
-    store_name?: string
-    store_id?: number
+    bill_id?: number
+    issue_date: string
+    location?: string
     total_bill: number
+    total_quantity: number
+    store_id?: number
+    store_name?: string
+    seller?: string
 }
 
-// language types
 export type Translations = {
     [key: string]: {
         en: string
@@ -68,12 +64,9 @@ export type TranslationContext = {
 }
 export type Language = "en" | "ar"
 
-
-
-// Settings
 export interface UserSettings {
-    username: string;
-    theme: 'light' | 'dark' | 'system';
+    username: string
+    theme: 'light' | 'dark'
     language: Language;
 }
 
@@ -83,67 +76,33 @@ export type SettingsContextType = {
     isLoading: boolean;
 };
 
-// Database Models
-export interface Contract {
+export interface contract {
     contract_id?: number;
     contract_name: string;
     percentage: number;
 }
 
-export interface Company {
+export interface company {
     company_id?: number;
     company_name: string;
     contract_id: number;
     extra_services?: string;
 }
 
-export interface Item {
-    item_id?: string;
-    item_name: string;
-    price: number;
-    company_id: number;
-}
-
-export interface ItemNote {
+export interface itemNote {
     item_id: string;
     start_date: string;
     end_date: string;
     content: string;
 }
 
-
-
-export interface Bill {
-    bill_id?: number;
-    issue_date: string;
-    location?: string;
-    total_bill: number;
-    total_quantity: number;
-    store_id?: number;
-    store_name?: string;
-    seller?: string;
-}
-
-export interface Collection {
-    payment_id?: number;
-    payment_date: string;
-    bill_id: number;
-    store_id: number;
-    amount_total: number;
-    amount_received: number;
-    readonly amount_remaining?: number; // Generated
-    delivery_status: boolean;
-    collection_status: boolean;
-}
-
-
-export interface Store {
+export interface store {
     store_id?: number;
     store_name: string;
     location?: string;
 }
 
-export interface Purchase {
+export interface purchase {
     purchase_id?: number;
     bill_id: number;
     item_id: string;
@@ -204,9 +163,39 @@ export interface IBillRepository extends IBaseRepository<Bill, number> { }
 export interface ICollectionRepository extends IBaseRepository<Collection, number> { }
 export interface IPurchaseRepository extends IBaseRepository<Purchase, number> { }
 
-
 declare global {
     interface Window {
-        electron: { [key: string]: any };
+        electron: {
+            // Items & records
+            getAllItems: () => Promise<item[]>;
+            createItem: (item: item) => Promise<string>;
+            deleteItem: (id: string) => Promise<boolean>;
+            // Records / Sales
+            getRecords: () => Promise<ViewRecord[]>;
+            getCompanySales: (dateFilterType: string) => Promise<ViewCompanySale[]>;
+            getItemSales: (startDate: string, endDate: string) => Promise<ViewItemSale[]>;
+            // Bills
+            createBill: (bill: bill) => Promise<string>;
+            createPurchases: (purchases: purchase[]) => Promise<string>;
+            getAllBills: () => Promise<bill[]>;
+            // Collections
+            addCollection: (collection: collection) => Promise<string>;
+            getAllCollections: () => Promise<collection[]>;
+            // Companies & Contracts (Catalog)
+            createCompany: (company: company) => Promise<string>;
+            getAllCompanies: () => Promise<company[]>;
+            deleteCompany: (id: number) => Promise<boolean>;
+            getAllContracts: () => Promise<contract[]>;
+            createContract: (contract: contract) => Promise<string>;
+            // Settings
+            getSettings: () => Promise<UserSettings>;
+            setSetting: (key: string, value: any) => Promise<boolean>;
+            // Shortcuts
+            onTabChange: (callback: (tab: string) => void) => void;
+            // Dev
+            injectSampleData: () => Promise<void>;
+            // Print
+            printBill: (bill: bill) => Promise<{ success: boolean; error?: string }>;
+        };
     }
 }

@@ -1,6 +1,6 @@
 import { FileText, Wallet, Database, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useTranslation } from "@/lib/language-context"
+import { useTranslation } from "@lib/language-context"
 import type { TabsNavProps } from "@/src/global-types"
 
 const tabs = [
@@ -24,7 +24,7 @@ export function TabsNav({ activeTab, onTabChange }: TabsNavProps) {
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+              "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors select-none",
               isActive
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"

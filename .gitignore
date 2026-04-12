@@ -19,6 +19,7 @@ backup/
 tests/
 *.local
 .pnpm-*
+.to-do.md
 
 # Editor directories and files
 cert/

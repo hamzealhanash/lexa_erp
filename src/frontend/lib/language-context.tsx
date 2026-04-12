@@ -1,6 +1,6 @@
 import translationsJson from "./translations.json"
 import { createContext, useContext, type ReactNode } from "react"
-import type { Language, TranslationContext, Translations } from "@/types"
+import type { Language, TranslationContext, Translations } from "@types"
 import { useSettings } from "./settings-context"
 
 const translations: Translations = translationsJson

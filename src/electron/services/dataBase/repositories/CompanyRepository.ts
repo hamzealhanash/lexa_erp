@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { Company, ICompanyRepository } from "@/types";
+import { company, ICompanyRepository } from "@types";
 
 export class CompanyRepository implements ICompanyRepository {
-    async create(company: Company): Promise<number | bigint> {
+    async create(company: company): Promise<number | bigint> {
         const stmt = getDb().prepare(`
       INSERT INTO companys (company_name, contract_id, extra_services)
       VALUES (?, ?, ?)
@@ -11,15 +11,15 @@ export class CompanyRepository implements ICompanyRepository {
         return info.lastInsertRowid;
     }
 
-    async getById(id: number): Promise<Company | undefined> {
-        return getDb().prepare('SELECT * FROM companys WHERE company_id = ?').get(id) as Company | undefined;
+    async getById(id: number): Promise<company | undefined> {
+        return getDb().prepare('SELECT * FROM companys WHERE company_id = ?').get(id) as company | undefined;
     }
 
-    async getAll(): Promise<Company[]> {
-        return getDb().prepare('SELECT * FROM companys').all() as Company[];
+    async getAll(): Promise<company[]> {
+        return getDb().prepare('SELECT * FROM companys').all() as company[];
     }
 
-    async update(id: number, company: Partial<Company>): Promise<boolean> {
+    async update(id: number, company: Partial<company>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 

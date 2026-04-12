@@ -12,14 +12,28 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/types": ["src/global-types.d.ts"],
-      "@src/*": ["src/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@types": [
+        "./src/global-types.d.ts"
+      ],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@services/*": [
+        "./src/electron/services/*"
+      ],
+      "@electron/*": [
+        "./src/electron/*"
+      ]
     }
   },
   "include": [
-    "src/electron/**/*",
-    "src/backend/**/*"
+    "src/electron/**/*"
   ],
-  "exclude": ["node_modules", "src/frontend"]
+  "exclude": [
+    "node_modules",
+    "src/frontend"
+  ]
 }

@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { useTranslation } from "@/lib/language-context"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
+import { Input } from "@components/ui/input"
+import { Label } from "@components/ui/label"
+import { Button } from "@components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@components/ui/table"
+import { useTranslation } from "@lib/language-context"
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/src/frontend/components/ui/combobox"
 import { toast } from "sonner"
 import { Plus, Trash2, Building2, Package } from "lucide-react"
-import type { Company, Contract, Item } from "@/src/global-types"
+import type { company, contract, item } from "@/src/global-types"
 
 // ─────────────────────────────────────────────
 // Companies Sub-Tab
 // ─────────────────────────────────────────────
 function CompaniesTab() {
     const { t } = useTranslation()
-    const [companies, setCompanies] = useState<Company[]>([])
-    const [contracts, setContracts] = useState<Contract[]>([])
+    const [companies, setCompanies] = useState<company[]>([])
+    const [contracts, setContracts] = useState<contract[]>([])
     const [form, setForm] = useState<{
         company_name: string;
         contract_id: number | "other" | null;
@@ -79,7 +79,7 @@ function CompaniesTab() {
             await window.electron.createCompany({
                 company_name: form.company_name.trim(),
                 contract_id: finalContractId ?? 1,
-                extra_services: form.extra_services || null,
+                extra_services: form.extra_services,
             })
 
             setForm({ company_name: "", contract_id: null, extra_services: "" })
@@ -242,12 +242,12 @@ function CompaniesTab() {
 function ItemsTab() {
     const { t } = useTranslation()
     // Items returned from getAllItems already include company_name via SQL JOIN
-    const [items, setItems] = useState<(Item & { company_name?: string })[]>([])
-    const [companies, setCompanies] = useState<Company[]>([])
-    const [form, setForm] = useState<{ item_name: string; price: string; company_id: number | null }>({
+    const [items, setItems] = useState<(item & { company_name?: string })[]>([])
+    const [companies, setCompanies] = useState<company[]>([])
+    const [form, setForm] = useState<{ item_name: string; price: string; company_id: number }>({
         item_name: "",
         price: "",
-        company_id: null,
+        company_id: 1,
     })
 
     const selectedCompany = useMemo(
@@ -286,7 +286,7 @@ function ItemsTab() {
                 price,
                 company_id: form.company_id,
             })
-            setForm({ item_name: "", price: "", company_id: null })
+            setForm({ item_name: "", price: "", company_id: 1 })
             await fetchItems()  // only re-fetch items, companies haven't changed
         })()
         toast.promise(savePromise, {
@@ -338,9 +338,9 @@ function ItemsTab() {
                         <Label>{t("companyName")}</Label>
                         <Combobox
                             items={companies}
-                            itemToStringLabel={(c: Company) => c.company_name}
+                            itemToStringLabel={(c: company) => c.company_name}
                             value={selectedCompany}
-                            onValueChange={(c: Company | null) => setForm(p => ({ ...p, company_id: c?.company_id ?? null }))}
+                            onValueChange={(c: company | null) => setForm(p => ({ ...p, company_id: c?.company_id ?? 1 }))}
                         >
                             <ComboboxInput placeholder={t("selectCompany")} showClear={!!selectedCompany} />
                             <ComboboxContent>

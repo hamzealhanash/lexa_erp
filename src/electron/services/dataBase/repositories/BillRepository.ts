@@ -1,11 +1,10 @@
 import { getDb } from '../connection.js';
-import { Bill, IBillRepository } from "@/types";
+import { bill, IBillRepository } from "@types";
 
 export class BillRepository implements IBillRepository {
-    async create(bill: Bill): Promise<number | bigint> {
+    async create(bill: bill): Promise<number | bigint> {
         let storeId = bill.store_id;
 
-        // Auto-resolve or create store_id from store_name if ID is explicitly missing
         if (!storeId && bill.store_name) {
             const existingStore = getDb().prepare('SELECT store_id FROM stores WHERE store_name = ?').get(bill.store_name) as { store_id: number } | undefined;
             if (existingStore) {
@@ -25,25 +24,25 @@ export class BillRepository implements IBillRepository {
             bill.location || null,
             bill.total_bill,
             bill.total_quantity,
-            storeId || 1, // fallback to avoid database abort if someone somehow bypasses the check
+            storeId || 1,
             bill.seller || null
         );
         return info.lastInsertRowid;
     }
 
-    async getById(id: number): Promise<Bill | undefined> {
-        return getDb().prepare('SELECT bills.*, stores.store_name FROM bills LEFT JOIN stores ON bills.store_id = stores.store_id WHERE bills.bill_id = ?').get(id) as Bill | undefined;
+    async getById(id: number): Promise<bill | undefined> {
+        return getDb().prepare('SELECT bills.*, stores.store_name FROM bills LEFT JOIN stores ON bills.store_id = stores.store_id WHERE bills.bill_id = ?').get(id) as bill | undefined;
     }
 
-    async getAll(): Promise<Bill[]> {
-        return getDb().prepare('SELECT bills.*, stores.store_name FROM bills LEFT JOIN stores ON bills.store_id = stores.store_id').all() as Bill[];
+    async getAll(): Promise<bill[]> {
+        return getDb().prepare('SELECT bills.*, stores.store_name FROM bills LEFT JOIN stores ON bills.store_id = stores.store_id').all() as bill[];
     }
 
-    async update(id: number, bill: Partial<Bill>): Promise<boolean> {
+    async update(id: number, bill: Partial<bill>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 
-        const fields: (keyof Bill)[] = ['issue_date', 'location', 'total_bill', 'total_quantity', 'store_id', 'seller'];
+        const fields: (keyof bill)[] = ['issue_date', 'location', 'total_bill', 'total_quantity', 'store_id', 'seller'];
 
         fields.forEach(field => {
             if (bill[field] !== undefined) {

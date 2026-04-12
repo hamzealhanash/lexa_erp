@@ -1,15 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useTranslation } from "@/lib/language-context"
-import DataTable from "./records/dataTable"
-import { getRecordsColumns } from "./records/records_columns"
-import { getCompanySalesColumns } from "./records/company_sales_columns"
-import { getItemSalesColumns } from "./records/item_sales_columns"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
+import { useTranslation } from "@lib/language-context"
+import DataTable from "./tables/dataTable"
+import { getRecordsColumns } from "./tables/records_columns"
+import { getCompanySalesColumns } from "./tables/company_sales_columns"
+import { getItemSalesColumns } from "./tables/item_sales_columns"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import type { ViewRecord, ViewItemSale } from "@/types"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DatePicker } from "@/components/ui/custom/date-picker"
-
-
+import type { ViewRecord, ViewItemSale, bill } from "@types"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
+import { DatePicker } from "@components/ui/custom/date-picker"
+import { getBillsColumns } from "./tables/bills_columns"
 
 export default function RecordsCard() {
     const firstOfToday = new Date()
@@ -19,6 +18,7 @@ export default function RecordsCard() {
     const [recordData, setRecordData] = useState<ViewRecord[]>([])
     const [companySalesData, setCompanySalesData] = useState<any[]>([])
     const [itemSalesData, setItemSalesData] = useState<ViewItemSale[]>([])
+    const [billsData, setBillsData] = useState<bill[]>([])
     const [periodType, setPeriodType] = useState<'daily' | 'weekly' | 'monthly'>('daily')
     const [dateRange, setDateRange] = useState<{ start: string, end: string }>({
         start: firstOfMonth,
@@ -29,6 +29,7 @@ export default function RecordsCard() {
     const recordColumns = useMemo(() => getRecordsColumns(t, isRTL), [t, isRTL])
     const companySalesColumns = useMemo(() => getCompanySalesColumns(t), [t])
     const itemSalesColumns = useMemo(() => getItemSalesColumns(t), [t])
+    const billsColumns = useMemo(() => getBillsColumns(t), [t])
 
 
     const fetchRecords = useCallback(async () => {
@@ -61,11 +62,19 @@ export default function RecordsCard() {
             console.error("Error fetching item sales:", error)
         }
     }, [dateRange])
+    const fetchBills = useCallback(async () => {
+        try {
+            const response = await window.electron.getAllBills()
+            setBillsData(response)
+        } catch (error) {
+            console.error("Error fetching bills:", error)
+        }
+    }, [])
 
     useEffect(() => { fetchRecords() }, [fetchRecords])
     useEffect(() => { fetchCompanySales() }, [fetchCompanySales])
     useEffect(() => { fetchItemSales() }, [fetchItemSales])
-
+    useEffect(() => { fetchBills() }, [fetchBills])
 
     return (
         <Card>
@@ -77,11 +86,15 @@ export default function RecordsCard() {
                 <Tabs defaultValue="records" className="w-full">
                     <TabsList variant="line">
                         <TabsTrigger value="records">{t("records")}</TabsTrigger>
+                        <TabsTrigger value="bills">{t("bills")}</TabsTrigger>
                         <TabsTrigger value="companySales">{t("companySales")}</TabsTrigger>
                         <TabsTrigger value="itemSales">{t("itemSales")}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="records">
                         <DataTable columns={recordColumns} data={recordData} />
+                    </TabsContent>
+                    <TabsContent value="bills">
+                        <DataTable columns={billsColumns} data={billsData} />
                     </TabsContent>
                     <TabsContent value="companySales">
                         <div className="flex justify-between items-center mb-4">

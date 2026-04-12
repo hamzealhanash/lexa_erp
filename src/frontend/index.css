@@ -126,9 +126,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
@@ -142,7 +144,16 @@ html {
   scrollbar-width: none;
 }
 
+label {
+  @apply select-none;
+}
+
+::placeholder {
+  @apply select-none;
+}
+
 @layer utilities {
+
   .no-spinner::-webkit-inner-spin-button,
   .no-spinner::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -151,6 +162,7 @@ html {
 
   .no-spinner {
     -moz-appearance: textfield;
+    appearance: textfield;
   }
 
   .standard-digits {

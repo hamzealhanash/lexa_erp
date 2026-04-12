@@ -1,7 +1,7 @@
-import Logo from "@/assets/Logo.png"
-import { useSettings } from "@/lib/settings-context"
-import { Button } from "@/components/ui/button"
-import { useTranslation } from "@/lib/language-context"
+import Logo from "@assets/Logo.png"
+import { useSettings } from "@lib/settings-context"
+import { Button } from "@components/ui/button"
+import { useTranslation } from "@lib/language-context"
 import type { Language } from "@/src/global-types"
 import { Globe, User, ChevronDown, Sun, Moon } from "lucide-react"
 import {
@@ -9,24 +9,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-
-
+} from "@components/ui/dropdown-menu"
 
 const languages: { code: Language, name: string }[] = [
   { code: "en", name: "English" },
   { code: "ar", name: "العربية" },
 ]
 
-
-
 export function TopBar() {
   const { settings, updateSetting } = useSettings()
   const { language, t } = useTranslation()
   const currentLanguage = languages.find(l => l.code === language)
 
-  const isDark = settings.theme === 'dark' || (settings.theme === 'system' && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  const isDark = settings.theme === 'dark'
 
   const toggleTheme = () => {
     updateSetting('theme', isDark ? 'light' : 'dark')

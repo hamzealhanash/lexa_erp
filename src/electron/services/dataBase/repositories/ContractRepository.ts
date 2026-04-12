@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { Contract, IContractRepository } from "@/types";
+import { contract, IContractRepository } from "@types";
 
 export class ContractRepository implements IContractRepository {
-    async create(contract: Contract): Promise<number | bigint> {
+    async create(contract: contract): Promise<number | bigint> {
         const stmt = getDb().prepare(`
       INSERT INTO contracts (contract_name, percentage)
       VALUES (?, ?)
@@ -11,15 +11,15 @@ export class ContractRepository implements IContractRepository {
         return info.lastInsertRowid;
     }
 
-    async getById(id: number): Promise<Contract | undefined> {
-        return getDb().prepare('SELECT * FROM contracts WHERE contract_id = ?').get(id) as Contract | undefined;
+    async getById(id: number): Promise<contract | undefined> {
+        return getDb().prepare('SELECT * FROM contracts WHERE contract_id = ?').get(id) as contract | undefined;
     }
 
-    async getAll(): Promise<Contract[]> {
-        return getDb().prepare('SELECT * FROM contracts').all() as Contract[];
+    async getAll(): Promise<contract[]> {
+        return getDb().prepare('SELECT * FROM contracts').all() as contract[];
     }
 
-    async update(id: number, contract: Partial<Contract>): Promise<boolean> {
+    async update(id: number, contract: Partial<contract>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 

@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { Store, IStoreRepository } from "@/types";
+import { store, IStoreRepository } from "@types";
 
 export class StoreRepository implements IStoreRepository {
-    async create(store: Store): Promise<number | bigint> {
+    async create(store: store): Promise<number | bigint> {
         const stmt = getDb().prepare(`
       INSERT INTO stores (store_name, location)
       VALUES (?, ?)
@@ -11,15 +11,15 @@ export class StoreRepository implements IStoreRepository {
         return info.lastInsertRowid;
     }
 
-    async getById(id: number): Promise<Store | undefined> {
-        return getDb().prepare('SELECT * FROM stores WHERE store_id = ?').get(id) as Store | undefined;
+    async getById(id: number): Promise<store | undefined> {
+        return getDb().prepare('SELECT * FROM stores WHERE store_id = ?').get(id) as store | undefined;
     }
 
-    async getAll(): Promise<Store[]> {
-        return getDb().prepare('SELECT * FROM stores').all() as Store[];
+    async getAll(): Promise<store[]> {
+        return getDb().prepare('SELECT * FROM stores').all() as store[];
     }
 
-    async update(id: number, store: Partial<Store>): Promise<boolean> {
+    async update(id: number, store: Partial<store>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 

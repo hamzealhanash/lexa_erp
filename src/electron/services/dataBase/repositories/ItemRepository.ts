@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { Item, IItemRepository } from "@/types";
+import { item, IItemRepository } from "@types";
 
 export class ItemRepository implements IItemRepository {
-    async create(item: Item): Promise<string> {
+    async create(item: item): Promise<string> {
         const stmt = getDb().prepare(`
       INSERT INTO items (item_id, item_name, price, company_id)
       VALUES (?, ?, ?, ?)
@@ -11,15 +11,15 @@ export class ItemRepository implements IItemRepository {
         return item.item_id as string;
     }
 
-    async getById(id: string): Promise<Item | undefined> {
-        return getDb().prepare('SELECT * FROM items WHERE item_id = ?').get(id) as Item | undefined;
+    async getById(id: string): Promise<item | undefined> {
+        return getDb().prepare('SELECT * FROM items WHERE item_id = ?').get(id) as item | undefined;
     }
 
-    async getAll(): Promise<Item[]> {
-        return getDb().prepare('SELECT * FROM items').all() as Item[];
+    async getAll(): Promise<item[]> {
+        return getDb().prepare('SELECT * FROM items').all() as item[];
     }
 
-    async update(id: string, item: Partial<Item>): Promise<boolean> {
+    async update(id: string, item: Partial<item>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 

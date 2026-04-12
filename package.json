@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "concurrently --kill-others \"pnpm dev:frontend\" \"pnpm dev:electron\"",
     "dev:frontend": " tsc -b && vite",
-    "dev:electron": " pnpm compile:main && cross-env NODE_ENV=development electron . --trace-warnings",
+    "tsc": "tsc -b",
+    "dev:electron": " pnpm compile:main && cross-env NODE_ENV=development nodemon --watch src/electron --exec electron .",
     "compile:main": "tsc --project tsconfig.main.json",
     "compile:frontend": "tsc -b && vite build",
     "build:mac": "pnpm compile:main && pnpm compile:frontend && electron-builder --mac --arm64",
@@ -30,13 +31,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "electron-pos-printer": "^1.3.8",
     "electron-store": "^11.0.2",
-    "lucide-react": "^1.7.0",
+    "lucide-react": "^1.8.0",
     "next-themes": "^0.4.6",
-    "react": "^19.2.4",
+    "react": "^19.2.5",
     "react-day-picker": "^9.14.0",
-    "react-dom": "^19.2.4",
-    "shadcn": "^4.1.2",
+    "react-dom": "^19.2.5",
+    "shadcn": "^4.2.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
@@ -45,7 +47,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
@@ -59,17 +61,17 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^16.5.0",
+    "nodemon": "^3.1.14",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.58.0",
-    "vite": "^7.3.1"
+    "typescript-eslint": "^8.58.1",
+    "vite": "^7.3.2"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "electron",
-      "better-sqlite3",
-      "better-sqlite3-multiple-ciphers",
-      "esbuild",
-      "electron-winstaller"
-    ]
-  }
+  "onlyBuiltDependencies": [
+    "electron",
+    "better-sqlite3",
+    "better-sqlite3-multiple-ciphers",
+    "esbuild",
+    "electron-winstaller",
+    "msw"
+  ]
 }

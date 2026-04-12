@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import type { ViewCompanySale } from "@/types"
+import type { ViewCompanySale } from "@types"
 
 
 export const getCompanySalesColumns = (t: (key: string) => string): ColumnDef<ViewCompanySale>[] => [

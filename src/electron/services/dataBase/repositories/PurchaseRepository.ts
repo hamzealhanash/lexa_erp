@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { Purchase, IPurchaseRepository } from "@/types";
+import { purchase, IPurchaseRepository } from "@types";
 
 export class PurchaseRepository implements IPurchaseRepository {
-    async create(purchase: Purchase): Promise<number | bigint> {
+    async create(purchase: purchase): Promise<number | bigint> {
         const stmt = getDb().prepare(`
       INSERT INTO purchases (bill_id, item_id, quantity, price, total_price)
       VALUES (?, ?, ?, ?, ?)
@@ -17,19 +17,32 @@ export class PurchaseRepository implements IPurchaseRepository {
         return info.lastInsertRowid;
     }
 
-    async getById(id: number): Promise<Purchase | undefined> {
-        return getDb().prepare('SELECT * FROM purchases WHERE purchase_id = ?').get(id) as Purchase | undefined;
+    async createMany(purchases: purchase[]): Promise<void> {
+        const stmt = getDb().prepare(`
+      INSERT INTO purchases (bill_id, item_id, quantity, price, total_price)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+        const insertAll = getDb().transaction((items: purchase[]) => {
+            for (const p of items) {
+                stmt.run(p.bill_id, p.item_id, p.quantity, p.price || null, p.total_price || null);
+            }
+        });
+        insertAll(purchases);
     }
 
-    async getAll(): Promise<Purchase[]> {
-        return getDb().prepare('SELECT * FROM purchases').all() as Purchase[];
+    async getById(id: number): Promise<purchase | undefined> {
+        return getDb().prepare('SELECT * FROM purchases WHERE purchase_id = ?').get(id) as purchase | undefined;
     }
 
-    async update(id: number, purchase: Partial<Purchase>): Promise<boolean> {
+    async getAll(): Promise<purchase[]> {
+        return getDb().prepare('SELECT * FROM purchases').all() as purchase[];
+    }
+
+    async update(id: number, purchase: Partial<purchase>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 
-        const fields: (keyof Purchase)[] = ['bill_id', 'item_id', 'quantity', 'price', 'total_price'];
+        const fields: (keyof purchase)[] = ['bill_id', 'item_id', 'quantity', 'price', 'total_price'];
 
         fields.forEach(field => {
             if (purchase[field] !== undefined) {

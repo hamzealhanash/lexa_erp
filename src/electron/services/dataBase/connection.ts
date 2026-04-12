@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { app } from 'electron';
 import Database from 'better-sqlite3-multiple-ciphers';
-import { isDev } from '../../electron/utils';
-import { getDbEncryptionKey } from './keyManager';
+import { isDev } from '../../utils.js';
+import { getDbEncryptionKey } from './keyManager.js';
 
 // ─── Database Path ───────────────────────────────────────────────────────────
 let dbPath: string;
@@ -143,8 +143,8 @@ export const initDb = () => {
         amount_total INTEGER NOT NULL,
         amount_received INTEGER NOT NULL DEFAULT 0,
         amount_remaining INTEGER GENERATED ALWAYS AS (amount_total - amount_received) VIRTUAL,
-        delivery_status INTEGER NOT NULL,
-        collection_status INTEGER NOT NULL,
+        delivery_status TEXT NOT NULL,
+        collection_status TEXT NOT NULL,
         FOREIGN KEY (store_id) REFERENCES stores(store_id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (bill_id) REFERENCES bills(bill_id) ON DELETE CASCADE ON UPDATE CASCADE
     );
@@ -192,7 +192,14 @@ export const initDb = () => {
     -- Views
     DROP VIEW IF EXISTS view_records;
     CREATE VIEW view_records AS
-    SELECT b.bill_id, b.total_quantity AS quantity, b.issue_date, s.store_name, b.total_bill, c.delivery_status, c.collection_status
+    SELECT 
+    b.bill_id,
+    b.total_quantity AS quantity,
+    b.issue_date,
+    s.store_name,
+    b.total_bill,
+    c.delivery_status,
+    c.collection_status
     FROM bills b
     JOIN stores s ON b.store_id = s.store_id
     LEFT JOIN collection c ON b.bill_id = c.bill_id;

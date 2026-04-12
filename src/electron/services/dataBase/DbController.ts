@@ -15,9 +15,6 @@ export default class dbController {
     getRecords = () => {
         return getDb().prepare('SELECT * FROM view_records ORDER BY issue_date DESC').all();
     };
-    getAllCompanySales = () => {
-        return getDb().prepare('SELECT * FROM view_sales ORDER BY issue_date DESC').all();
-    };
     getCompanySales = (dateFilterType: 'daily' | 'weekly' | 'monthly') => {
         // Define the SQLite strftime format based on the period type
         let periodFormat: string;
@@ -76,9 +73,6 @@ export default class dbController {
     getItemSales = (startDate: string, endDate: string) => {
         return getDb().prepare('SELECT * FROM view_items_sales WHERE issue_date BETWEEN ? AND ?')
             .all(startDate, endDate);
-    };
-    getAllItemSales = () => {
-        return getDb().prepare('SELECT * FROM view_items_sales ORDER BY issue_date DESC').all();
     };
     saveItemNote = (itemId: string, startDate: string, endDate: string, content: string) => {
         const stmt = getDb().prepare(`

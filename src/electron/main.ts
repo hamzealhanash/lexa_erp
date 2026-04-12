@@ -1,15 +1,18 @@
-import path from 'path';
+import path from 'path'
 import os from "node:os"
-import { isDev } from "./utils.js";
-import Store from 'electron-store';
-import { initConnection, initDb } from '../backend/db/connection.js';
-import { app, BrowserWindow, ipcMain, Menu, dialog } from 'electron';
-import controller from '../backend/db/DbController.js';
-import { BillRepository } from '../backend/db/repositories/BillRepository.js';
-import { ItemRepository } from '../backend/db/repositories/ItemRepository.js';
-import { CollectionRepository } from '../backend/db/repositories/CollectionRepository.js';
-import { CompanyRepository } from '../backend/db/repositories/CompanyRepository.js';
-import { ContractRepository } from '../backend/db/repositories/ContractRepository.js';
+import Store from 'electron-store'
+import { isDev } from "./utils.js"
+import { sampleData } from '../tests/seed.js'
+import printBill from './services/printer/printService.js'
+import controller from './services/dataBase/DbController.js'
+import { app, BrowserWindow, ipcMain, Menu, dialog } from 'electron'
+import { getDb, initConnection, initDb } from './services/dataBase/connection.js'
+import { BillRepository } from './services/dataBase/repositories/BillRepository.js'
+import { ItemRepository } from './services/dataBase/repositories/ItemRepository.js'
+import { CompanyRepository } from './services/dataBase/repositories/CompanyRepository.js'
+import { ContractRepository } from './services/dataBase/repositories/ContractRepository.js'
+import { CollectionRepository } from './services/dataBase/repositories/CollectionRepository.js'
+import { PurchaseRepository } from './services/dataBase/repositories/PurchaseRepository.js'
 
 const schema = {
     appVersion: {
@@ -21,23 +24,24 @@ const schema = {
         default: {
             username: os.userInfo().username,
             theme: 'dark',
-            langage: 'en'
+            language: 'en'
         }
     }
 }
 const store = new Store({ schema })
 
-
 function initializeApp() {
     initConnection();
     const currentVersion = app.getVersion();
     const storedVersion = store.get('appVersion') as string;
-
-    if (storedVersion !== currentVersion) {
+    if (isDev()) {
+        initDb();
+    } else if (storedVersion !== currentVersion) {
         console.log(`App updated: ${storedVersion} → ${currentVersion}. Running schema migration...`);
         initDb();
         store.set('appVersion', currentVersion);
     }
+
 }
 
 function configuringIPC() {
@@ -47,6 +51,7 @@ function configuringIPC() {
     const collectionRepository = new CollectionRepository();
     const companyRepository = new CompanyRepository();
     const contractRepository = new ContractRepository();
+    const purchaseRepository = new PurchaseRepository();
     const { getRecords, getAllItems, getCompanySales, getItemSales } = dbController;
 
     // Records & Sales
@@ -60,6 +65,8 @@ function configuringIPC() {
     // Bills
     ipcMain.handle('createBill', async (_event, bill) => billRepository.create(bill));
     ipcMain.handle('getAllBills', async () => billRepository.getAll());
+    // Purchases
+    ipcMain.handle('createPurchases', async (_event, purchases) => purchaseRepository.createMany(purchases));
     // Items
     ipcMain.handle('createItem', async (_event, item) => itemRepository.create(item));
     ipcMain.handle('deleteItem', async (_event, id) => itemRepository.delete(id));
@@ -73,8 +80,16 @@ function configuringIPC() {
     // Contracts
     ipcMain.handle('getAllContracts', async () => contractRepository.getAll());
     ipcMain.handle('createContract', async (_event, contract) => contractRepository.create(contract));
-}
+    // Print
+    ipcMain.handle('printBill', async (_event, bill) => printBill(bill));
 
+    if (isDev()) {
+        ipcMain.handle('injectSampleData', async () => {
+            getDb().exec(sampleData)
+        })
+    }
+}
+app.commandLine.appendSwitch('lang', 'en-US');
 app.whenReady().then(() => {
     initializeApp()
     const mainWindow = new BrowserWindow({

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useTranslation } from "@/lib/language-context"
+import { Input } from "@components/ui/input"
+import { Button } from "@components/ui/button"
+import { Checkbox } from "@components/ui/checkbox"
+import { useTranslation } from "@lib/language-context"
 import { Calendar, Save, User, Store } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Item, ItemContent, ItemDescription, ItemTitle, } from "@/components/ui/item"
-import type { bill, CollectionEntryType } from "@/src/global-types"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
+import { Item, ItemContent, ItemDescription, ItemTitle, } from "@components/ui/item"
+import type { bill, collection } from "@/src/global-types"
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/src/frontend/components/ui/combobox"
 import { toast } from "sonner"
 import { format } from "date-fns"
@@ -14,7 +14,8 @@ import { format } from "date-fns"
 export default function CollectionCard() {
     const { t, isRTL } = useTranslation()
 
-    const [formData, setFormData] = useState<Omit<CollectionEntryType, 'payment_id'>>({
+    const [availableBills, setAvailableBills] = useState<bill[]>([])
+    const [formData, setFormData] = useState<Omit<collection, 'payment_id'>>({
         payment_date: format(new Date(), "yyyy/MM/dd hh:mm aa"),
         bill_id: 0,
         store_id: 0,
@@ -26,8 +27,6 @@ export default function CollectionCard() {
         collection_status: false,
         delivery_status: false
     })
-
-    const [availableBills, setAvailableBills] = useState<bill[]>([])
 
     const fetchBills = useCallback(async () => {
         try {
@@ -41,7 +40,7 @@ export default function CollectionCard() {
         fetchBills()
     }, [fetchBills])
 
-    const updateField = (field: keyof Omit<CollectionEntryType, 'payment_id'>, value: string | number | boolean) => {
+    const updateField = (field: keyof Omit<collection, 'payment_id'>, value: string | number | boolean) => {
         setFormData(prev => {
             const updated = { ...prev, [field]: value }
             if (field === "amount_received") {
@@ -76,13 +75,12 @@ export default function CollectionCard() {
         updateField("bill_id", bill?.bill_id || 0)
         handleBillSelect(bill)
     }
-
     const handleSave = async () => {
         if (!formData.bill_id || !formData.amount_received) {
             toast.warning(t("enterAllInfo"))
             return
         }
-        const resetForm: Omit<CollectionEntryType, 'payment_id'> = {
+        const resetForm: Omit<collection, 'payment_id'> = {
             payment_date: format(new Date(), "yyyy/MM/dd hh:mm aa"),
             bill_id: 0,
             store_id: 0,
@@ -95,7 +93,10 @@ export default function CollectionCard() {
             delivery_status: false
         }
         const savePromise = (async () => {
-            await window.electron.addCollection(formData)
+            const tempData: any = formData
+            tempData.collection_status = tempData.amount_remaining === 0 ? "collected" : "due"
+            tempData.delivery_status = formData.delivery_status ? "delivered" : "pending"
+            await window.electron.addCollection(tempData)
             setFormData(resetForm)
             fetchBills()
         })()
@@ -111,7 +112,7 @@ export default function CollectionCard() {
 
     return (<Card>
         <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between select-none">
                 <span>{t("collectionEntry")}</span>
                 <Button className="bg-primary hover:bg-primary/90" onClick={handleSave}>
                     <Save className="h-4 w-4 me-2" />
@@ -120,20 +121,19 @@ export default function CollectionCard() {
             </CardTitle>
         </CardHeader>
         <CardContent>
-            <p className="text-sm text-muted-foreground mb-6">{t("enterCollectionInfo")}</p>
+            <p className="text-sm text-muted-foreground mb-6 select-none">{t("enterCollectionInfo")}</p>
 
             <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                     <Item>
                         <ItemContent>
-                            <ItemTitle className={`mb-1 ${isRTL ? "mr-2" : "ml-2"}`}>{t("billId")}</ItemTitle>
+                            <ItemTitle className={`mb-1 select-none ${isRTL ? "mr-2" : "ml-2"}`}>{t("billId")}</ItemTitle>
                             <Combobox
                                 items={availableBills}
                                 itemToStringValue={(bill: bill) => String(bill.bill_id)}
                                 itemToStringLabel={(bill: bill) => String(bill.bill_id)}
                                 value={selectedItem}
-                                onValueChange={handleChange}
-                            >
+                                onValueChange={handleChange}>
                                 <ComboboxInput placeholder={t("billId")} showClear={!!formData.bill_id} />
                                 <ComboboxContent>
                                     <ComboboxEmpty>{t("noBillsFound")}</ComboboxEmpty>
@@ -195,8 +195,6 @@ export default function CollectionCard() {
                             <Input
                                 type="number"
                                 placeholder={`0.00 ${t("currency")}`}
-                                min={0}
-                                max={formData.amount_total}
                                 value={formData.amount_received || ""}
                                 onChange={(event) => {
                                     const val = Math.min(Math.max(0, Number(event.target.value)), formData.amount_total)
@@ -218,7 +216,10 @@ export default function CollectionCard() {
                         <Checkbox
                             id="collectionStatus"
                             checked={formData.collection_status}
-                            onCheckedChange={(checked) => updateField("collection_status", checked as boolean)}
+                            onCheckedChange={(checked) => {
+                                updateField("collection_status", checked as boolean)
+                                checked ? updateField("amount_received", formData.amount_total) : updateField("amount_received", 0)
+                            }}
                         />
                         <label
                             htmlFor="collectionStatus"

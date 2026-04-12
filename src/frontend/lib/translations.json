@@ -199,6 +199,10 @@
     "en": "Cannot save an empty bill.",
     "ar": "لا يمكن حفظ فاتورة فارغة."
   },
+  "fillAllFields": {
+    "en": "Please fill all fields.",
+    "ar": "يرجى ملء جميع الحقول."
+  },
   "savingCollection": {
     "en": "Saving collection...",
     "ar": "جاري حفظ الجباية..."
@@ -366,6 +370,29 @@
   "contractName": {
     "en": "Contract Name",
     "ar": "اسم العقد"
+  },
+  "noItemsFound": {
+    "en": "No items found.",
+    "ar": "لا يوجد عناصر."
+  },
+  "noBillsFound": {
+    "en": "No bills found.",
+    "ar": "لا يوجد فواتير."
+  },
+  "printTheBill": {
+    "en": "Print the bill",
+    "ar": "طباعة الفاتورة"
+  },
+  "printingBill": {
+    "en": "Printing bill...",
+    "ar": "جاري طباعة الفاتورة..."
+  },
+  "billPrintedSuccess": {
+    "en": "Bill printed successfully!",
+    "ar": "تم طباعة الفاتورة بنجاح!"
+  },
+  "billPrintedError": {
+    "en": "Error printing bill.",
+    "ar": "خطأ في طباعة الفاتورة."
   }
-  
 }

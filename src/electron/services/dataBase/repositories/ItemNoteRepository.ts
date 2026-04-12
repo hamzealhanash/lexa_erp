@@ -1,8 +1,8 @@
 import { getDb } from '../connection.js';
-import { ItemNote, IItemNoteRepository } from "@/types";
+import { itemNote, IItemNoteRepository } from "@types";
 
 export class ItemNoteRepository implements IItemNoteRepository {
-    async create(note: ItemNote): Promise<string> {
+    async create(note: itemNote): Promise<string> {
         const stmt = getDb().prepare(`
       INSERT INTO item_notes (item_id, start_date, end_date, content)
       VALUES (?, ?, ?, ?)
@@ -11,15 +11,15 @@ export class ItemNoteRepository implements IItemNoteRepository {
         return note.item_id;
     }
 
-    async getById(id: string): Promise<ItemNote | undefined> {
-        return getDb().prepare('SELECT * FROM item_notes WHERE item_id = ?').get(id) as ItemNote | undefined;
+    async getById(id: string): Promise<itemNote | undefined> {
+        return getDb().prepare('SELECT * FROM item_notes WHERE item_id = ?').get(id) as itemNote | undefined;
     }
 
-    async getAll(): Promise<ItemNote[]> {
-        return getDb().prepare('SELECT * FROM item_notes').all() as ItemNote[];
+    async getAll(): Promise<itemNote[]> {
+        return getDb().prepare('SELECT * FROM item_notes').all() as itemNote[];
     }
 
-    async update(id: string, note: Partial<ItemNote>): Promise<boolean> {
+    async update(id: string, note: Partial<itemNote>): Promise<boolean> {
         const sets: string[] = [];
         const values: any[] = [];
 

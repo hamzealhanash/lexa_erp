@@ -20,11 +20,11 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@/components": path.resolve(__dirname, "./src/frontend/components"),
-      "@/lib": path.resolve(__dirname, "./src/frontend/lib"),
-      "@/types": path.resolve(__dirname, "./src/global-types.d.ts"),
+      "@components": path.resolve(__dirname, "./src/frontend/components"),
+      "@lib": path.resolve(__dirname, "./src/frontend/lib"),
+      "@types": path.resolve(__dirname, "./src/global-types.d.ts"),
       "@/frontend": path.resolve(__dirname, "./src/frontend"),
-      "@/assets": path.resolve(__dirname, "./src/frontend/assets"),
+      "@assets": path.resolve(__dirname, "./src/frontend/assets"),
       "@": path.resolve(__dirname, "./"),
     },
   },
