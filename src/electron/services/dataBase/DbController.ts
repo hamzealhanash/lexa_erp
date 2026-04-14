@@ -19,11 +19,11 @@ export default class dbController {
         // Define the SQLite strftime format based on the period type
         let periodFormat: string;
         if (dateFilterType === 'daily') {
-            periodFormat = '%Y-%m-%d';      // e.g. 2024-03-08
+            periodFormat = '%Y/%m/%d';      // e.g. 2024-03-08
         } else if (dateFilterType === 'weekly') {
-            periodFormat = '%Y-W%W';        // e.g. 2024-W10 (W10 = 10th week of the year)
+            periodFormat = '%Y/W%W';        // e.g. 2024-W10 (W10 = 10th week of the year)
         } else if (dateFilterType === 'monthly') {
-            periodFormat = '%Y-%m';         // e.g. 2024-03
+            periodFormat = '%Y/%m';         // e.g. 2024-03
         } else {
             throw new Error('Invalid dateFilterType');
         }
@@ -40,35 +40,7 @@ export default class dbController {
         GROUP BY period, item_id
         ORDER BY period DESC, company_name ASC, item ASC
     `).all(periodFormat) as any[];
-
-        // Structure the data: 
-        // We create an array of periods, where each period is an object 
-        // containing a 'companies' map.
-        const history: any[] = [];
-        let currentPeriod: string | null = null;
-        let periodData: any = null;
-
-        rows.forEach(row => {
-            if (row.period !== currentPeriod) {
-                currentPeriod = row.period;
-                periodData = {
-                    period: row.period,
-                    companies: {}
-                };
-                history.push(periodData);
-            }
-
-            const companyId = String(row.company_id);
-            if (!periodData.companies[companyId]) {
-                periodData.companies[companyId] = {
-                    companyName: row.company_name,
-                    items: []
-                };
-            }
-            periodData.companies[companyId].items.push(row);
-        });
-
-        return history;
+        return rows;
     };
     getItemSales = (startDate: string, endDate: string) => {
         return getDb().prepare('SELECT * FROM view_items_sales WHERE issue_date BETWEEN ? AND ?')

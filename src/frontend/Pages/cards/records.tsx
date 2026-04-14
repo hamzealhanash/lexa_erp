@@ -1,14 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { useTranslation } from "@lib/language-context"
 import DataTable from "./tables/dataTable"
-import { getRecordsColumns } from "./tables/records_columns"
-import { getCompanySalesColumns } from "./tables/company_sales_columns"
-import { getItemSalesColumns } from "./tables/item_sales_columns"
+import { getRecordsColumns } from "./tables/recordsColumns"
+import { getCompanySalesColumns } from "./tables/companySalesColumns"
+import { getItemSalesColumns } from "./tables/itemSalesColumns"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import type { ViewRecord, ViewItemSale, bill } from "@types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
 import { DatePicker } from "@components/ui/custom/date-picker"
-import { getBillsColumns } from "./tables/bills_columns"
+import { getBillsColumns } from "./tables/billsColumns"
 
 export default function RecordsCard() {
     const firstOfToday = new Date()
@@ -42,14 +42,8 @@ export default function RecordsCard() {
     }, [])
     const fetchCompanySales = useCallback(async () => {
         try {
-            const history = await window.electron.getCompanySales(periodType)
-            const flattened: any[] = []
-            history.forEach((p: any) => {
-                Object.values(p.companies).forEach((c: any) => {
-                    flattened.push(...c.items)
-                })
-            })
-            setCompanySalesData(flattened)
+            const rows = await window.electron.getCompanySales(periodType)
+            setCompanySalesData(rows)
         } catch (error) {
             console.error("Error fetching sales:", error)
         }
@@ -79,7 +73,7 @@ export default function RecordsCard() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{t("recordsViewOnly")}</CardTitle>
+                <CardTitle>{t("records")}</CardTitle>
             </CardHeader>
             <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">{t("completeRecord")}</p>

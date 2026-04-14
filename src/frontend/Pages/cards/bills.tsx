@@ -13,18 +13,25 @@ import { toast } from "sonner"
 import { format } from "date-fns"
 import { useVirtualizer } from "@tanstack/react-virtual"
 
-const BillRow = memo(({ item, onUpdate, onRemove, canRemove, t, isRTL, availableItems }: billRow) => {
+const BillRow = memo(({ item, onUpdate, onSelectItem, onRemove, canRemove, t, isRTL, availableItems }: billRow) => {
     const selectedItem = availableItems.find(i => i.item_name === item.item_name) || null
+    const rowId = (item as any)._rowId || item.item_id!
 
     const handleValueChange = (i: item | null) => {
         if (i) {
-            onUpdate(item.item_id!, "item_name", i.item_name)
-            onUpdate(item.item_id!, "price", i.price)
-            onUpdate(item.item_id!, "company_name", i.company_name || "")
+            onSelectItem(rowId, {
+                item_id: i.item_id || "",
+                item_name: i.item_name,
+                price: i.price,
+                company_name: i.company_name || "",
+            })
         } else {
-            onUpdate(item.item_id!, "item_name", "")
-            onUpdate(item.item_id!, "price", 0)
-            onUpdate(item.item_id!, "company_name", "")
+            onSelectItem(rowId, {
+                item_id: "",
+                item_name: "",
+                price: 0,
+                company_name: "",
+            })
         }
     }
     return (
@@ -61,7 +68,7 @@ const BillRow = memo(({ item, onUpdate, onRemove, canRemove, t, isRTL, available
                 <Input
                     placeholder={t("companyName")}
                     value={item.company_name || ""}
-                    onChange={event => onUpdate(item.item_id!, "company_name", event.target.value)}
+                    onChange={event => onUpdate(rowId, "company_name", event.target.value)}
                     className="bg-input border-border"
                 />
             </TableCell>
@@ -70,7 +77,7 @@ const BillRow = memo(({ item, onUpdate, onRemove, canRemove, t, isRTL, available
                     type="number"
                     placeholder="0"
                     value={item.quantity || ""}
-                    onChange={event => onUpdate(item.item_id!, "quantity", Number(event.target.value))}
+                    onChange={event => onUpdate(rowId, "quantity", Number(event.target.value))}
                     className="bg-input border-border w-24 no-spinner"
                 />
             </TableCell>
@@ -79,7 +86,7 @@ const BillRow = memo(({ item, onUpdate, onRemove, canRemove, t, isRTL, available
                     type="number"
                     placeholder={`0.00 ${t("currency")}`}
                     value={item.price || ""}
-                    onChange={event => onUpdate(item.item_id!, "price", Number(event.target.value))}
+                    onChange={event => onUpdate(rowId, "price", Number(event.target.value))}
                     className="bg-input border-border w-24 no-spinner"
                 />
             </TableCell>
@@ -94,7 +101,7 @@ const BillRow = memo(({ item, onUpdate, onRemove, canRemove, t, isRTL, available
                 <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => onRemove(item.item_id!)}
+                    onClick={() => onRemove(rowId)}
                     disabled={!canRemove}
                     className="text-destructive hover:text-destructive hover:bg-destructive/10">
                     <Trash2 className="h-4 w-4" />
@@ -105,9 +112,9 @@ const BillRow = memo(({ item, onUpdate, onRemove, canRemove, t, isRTL, available
 })
 
 const populateItemsList = () => {
-    const itemList: item[] = []
+    const itemList: (item & { _rowId: string })[] = []
     for (let i = 1; i <= 50; i++) {
-        itemList.push({ item_id: crypto.randomUUID(), item_name: "", seller: "", company_name: "", quantity: 0, price: 0, total_price: 0 })
+        itemList.push({ _rowId: crypto.randomUUID(), item_id: "", item_name: "", seller: "", company_name: "", quantity: 0, price: 0, total_price: 0 })
     }
     return itemList
 }
@@ -140,7 +147,7 @@ export default function BillsCard() {
 
     const scrollRef = useRef<HTMLDivElement>(null)
     const [availableItems, setAvailableItems] = useState<item[]>([])
-    const [itemsList, setItemsList] = useState<item[]>(populateItemsList())
+    const [itemsList, setItemsList] = useState<(item & { _rowId: string })[]>(populateItemsList())
     const [header, setHeader] = useState({
         store_name: "",
         location: "",
@@ -166,7 +173,8 @@ export default function BillsCard() {
     }, [fetchItems])
 
     const addItem = useCallback(() => setItemsList(prev => [...prev, {
-        item_id: crypto.randomUUID(),
+        _rowId: crypto.randomUUID(),
+        item_id: "",
         item_name: "",
         company_name: "",
         quantity: 0,
@@ -178,7 +186,7 @@ export default function BillsCard() {
 
     const updateItem = useCallback((id: number | string, field: keyof item, value: string | number) => {
         setItemsList(prev => prev.map(item => {
-            if (item.item_id === id) {
+            if (item._rowId === id) {
                 const updated = { ...item, [field]: value }
                 if (field === "quantity" || field === "price") {
                     updated.total_price = Number(updated.quantity) * Number(updated.price)
@@ -189,192 +197,204 @@ export default function BillsCard() {
         }))
     }, [])
 
+    const selectItem = useCallback((id: number | string, selected: Partial<item>) => {
+        setItemsList(prev => prev.map(row => {
+            if (row._rowId === id) {
+                const updated = { ...row, ...selected }
+                updated.total_price = Number(updated.quantity) * Number(updated.price)
+                return updated
+            }
+            return row
+        }))
+    }, [])
+
     const removeItem = useCallback((id: number | string) => {
-        setItemsList(prev => prev.length > 1 ? prev.filter(i => i.item_id !== id) : prev)
+        setItemsList(prev => prev.length > 1 ? prev.filter(i => i._rowId !== id) : prev)
     }, [])
 
     const totalQuantity = useMemo(() => itemsList.reduce((sum, item) => sum + Number(item.quantity), 0), [itemsList])
     const grandTotal = useMemo(() => itemsList.reduce((sum, item) => sum + (item.total_price ? item.total_price : 0), 0), [itemsList])
 
-const handleSaveBill = async () => {
-    const validItems = itemsList.filter(item => item.item_name !== "")
-    if (validItems.length === 0) {
-        toast.warning(t("noItems"))
-        return
-    }
-    if (!header.store_name || !header.seller) {
-        toast.warning(t("fillAllFields"))
-        return
-    }
-    const billData: bill = {
-        issue_date: format(new Date(), "yyyy/MM/dd hh:mm aa"),
-        location: header.location,
-        total_bill: grandTotal,
-        total_quantity: totalQuantity,
-        store_name: header.store_name,
-        seller: header.seller,
-    }
+    const handleSaveBill = async () => {
+        const validItems = itemsList.filter(item => item.item_name !== "" && item.item_id)
+        if (validItems.length === 0) {
+            toast.warning(t("noItems"))
+            return
+        }
+        if (!header.store_name || !header.seller) {
+            toast.warning(t("fillAllFields"))
+            return
+        }
+        const billData: bill = {
+            issue_date: format(new Date(), "yyyy-MM-dd HH:mm"),
+            location: header.location,
+            total_bill: grandTotal,
+            total_quantity: totalQuantity,
+            store_name: header.store_name,
+            seller: header.seller,
+        }
 
-    const savePromise = (async () => {
-        const billId = await window.electron.createBill(billData)
+        const savePromise = (async () => {
+            const newBillId = await window.electron.createBill(billData)
 
-        const purchases: purchase[] = validItems.map(item => ({
-            bill_id: Number(billId) || 1,
-            item_id: item.item_id || "",
-            quantity: item.quantity || 0,
-            price: item.price,
-            total_price: item.total_price
-        }))
-        await window.electron.createPurchases(purchases)
+            const purchases: purchase[] = validItems.map(item => ({
+                bill_id: Number(newBillId) || billId,
+                item_id: item.item_id || "",
+                quantity: item.quantity || 0,
+                price: item.price,
+                total_price: item.total_price
+            }))
+            await window.electron.createPurchases(purchases)
 
-        await getLatestBillId()
-        setHeader({
-            store_name: "",
-            location: "",
-            seller: ""
+            await getLatestBillId()
+            setHeader({
+                store_name: "",
+                location: "",
+                seller: ""
+            })
+            setItemsList(populateItemsList())
+        })()
+
+        toast.promise(savePromise, {
+            loading: t("savingBill"),
+            success: t("billSavedSuccess"),
+            error: t("billSavedError"),
         })
-        setItemsList(populateItemsList())
-    })()
+    }
+    return (<Card>
+        <CardHeader>
+            <CardTitle className="flex items-center justify-between select-none">
+                <span>{t("billsEntry")}</span>
+                <Button className="bg-primary hover:bg-primary/90" onClick={handleSaveBill}>
+                    <Save className="h-4 w-4 me-2" />
+                    {t("saveBill")}
+                </Button>
+            </CardTitle>
+        </CardHeader>
+        <CardContent>
+            <div className="space-y-8">
+                <p className="select-none text-sm text-muted-foreground mb-4">{t("enterMainBillInfo")}</p>
+                <div className="grid grid-cols-4 gap-4">
+                    <Item variant="muted">
+                        <Receipt />
+                        <ItemContent>
+                            <ItemTitle className="select-none">{t("billId")}</ItemTitle>
+                            <ItemDescription className="standard-digits">{billId}</ItemDescription>
+                        </ItemContent>
+                    </Item>
+                    <Item variant="muted">
+                        <Calendar />
+                        <ItemContent>
+                            <ItemTitle className="select-none">{t("issueDate")}</ItemTitle>
+                            <ItemDescription className={`standard-digits ${isRTL ? "text-end" : "text-start"}`} dir="ltr">{format(new Date(), "yyyy/MM/dd hh:mm aa")}</ItemDescription>
+                        </ItemContent>
+                    </Item>
+                    <Item variant="muted">
+                        <Tag />
+                        <ItemContent>
+                            <ItemTitle className="select-none">{t("totalQuantity")}</ItemTitle>
+                            <ItemDescription className="standard-digits">{totalQuantity}</ItemDescription>
+                        </ItemContent>
+                    </Item>
+                    <Item variant="muted">
+                        <Tag />
+                        <ItemContent>
+                            <ItemTitle className="select-none">{t("grandTotal")}</ItemTitle>
+                            <ItemDescription className="standard-digits">{grandTotal} {t("currency")} </ItemDescription>
+                        </ItemContent>
+                    </Item>
 
-    toast.promise(savePromise, {
-        loading: t("savingBill"),
-        success: t("billSavedSuccess"),
-        error: t("billSavedError"),
-    })
-}
-return (<Card>
-    <CardHeader>
-        <CardTitle className="flex items-center justify-between select-none">
-            <span>{t("billsEntry")}</span>
-            <Button className="bg-primary hover:bg-primary/90" onClick={handleSaveBill}>
-                <Save className="h-4 w-4 me-2" />
-                {t("saveBill")}
-            </Button>
-        </CardTitle>
-    </CardHeader>
-    <CardContent>
-        <div className="space-y-8">
-            <p className="select-none text-sm text-muted-foreground mb-4">{t("enterMainBillInfo")}</p>
-            <div className="grid grid-cols-4 gap-4">
-                <Item variant="muted">
-                    <Receipt />
-                    <ItemContent>
-                        <ItemTitle className="select-none">{t("billId")}</ItemTitle>
-                        <ItemDescription className="standard-digits">{billId}</ItemDescription>
-                    </ItemContent>
-                </Item>
-                <Item variant="muted">
-                    <Calendar />
-                    <ItemContent>
-                        <ItemTitle className="select-none">{t("issueDate")}</ItemTitle>
-                        <ItemDescription className={`standard-digits ${isRTL ? "text-end" : "text-start"}`} dir="ltr">{format(new Date(), "yyyy/MM/dd hh:mm aa")}</ItemDescription>
-                    </ItemContent>
-                </Item>
-                <Item variant="muted">
-                    <Tag />
-                    <ItemContent>
-                        <ItemTitle className="select-none">{t("totalQuantity")}</ItemTitle>
-                        <ItemDescription className="standard-digits">{totalQuantity}</ItemDescription>
-                    </ItemContent>
-                </Item>
-                <Item variant="muted">
-                    <Tag />
-                    <ItemContent>
-                        <ItemTitle className="select-none">{t("grandTotal")}</ItemTitle>
-                        <ItemDescription className="standard-digits">{grandTotal} {t("currency")} </ItemDescription>
-                    </ItemContent>
-                </Item>
-
-                <div className="space-y-2">
-                    <Label className={`text-sm pl-1 font-medium text-foreground`}>{t("store")}</Label>
-                    <Input
-                        placeholder={t("store")}
-                        value={header.store_name}
-                        onChange={(e) => setHeader({ ...header, store_name: e.target.value })}
-                        className="bg-input border-border "
-                    />
+                    <div className="space-y-2">
+                        <Label className={`text-sm pl-1 font-medium text-foreground`}>{t("store")}</Label>
+                        <Input
+                            placeholder={t("store")}
+                            value={header.store_name}
+                            onChange={(e) => setHeader({ ...header, store_name: e.target.value })}
+                            className="bg-input border-border "
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm pl-1 font-medium text-foreground">{t("location")}</Label>
+                        <Input
+                            placeholder={t("location")}
+                            value={header.location}
+                            onChange={(e) => setHeader({ ...header, location: e.target.value })}
+                            className="bg-input border-border"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm pl-1 font-medium text-foreground">{t("seller")}</Label>
+                        <Input
+                            placeholder={t("seller")}
+                            value={header.seller}
+                            onChange={(e) => setHeader({ ...header, seller: e.target.value })}
+                            className="bg-input border-border"
+                        />
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <Label className="text-sm pl-1 font-medium text-foreground">{t("location")}</Label>
-                    <Input
-                        placeholder={t("location")}
-                        value={header.location}
-                        onChange={(e) => setHeader({ ...header, location: e.target.value })}
-                        className="bg-input border-border"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label className="text-sm pl-1 font-medium text-foreground">{t("seller")}</Label>
-                    <Input
-                        placeholder={t("seller")}
-                        value={header.seller}
-                        onChange={(e) => setHeader({ ...header, seller: e.target.value })}
-                        className="bg-input border-border"
-                    />
+                <div className="space-y-10 bg-background dark:bg-background rounded-xl p-5">
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground select-none">{t("addMultipleItems")}</p>
+                        <Button onClick={addItem} variant="outline" size="sm">
+                            <Plus className="h-4 w-4 me-2" />
+                            {t("addItem")}
+                        </Button>
+                    </div>
+                    <div ref={scrollRef} className="max-h-100 overflow-auto relative">
+                        <Table>
+                            <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
+                                <TableRow>
+                                    <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
+                                        {t("item")}
+                                    </TableHead>
+                                    <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
+                                        {t("companyName")}
+                                    </TableHead>
+                                    <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
+                                        {t("quantity")}
+                                    </TableHead>
+                                    <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
+                                        {t("price")}
+                                    </TableHead>
+                                    <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
+                                        {t("totalPrice")}
+                                    </TableHead>
+                                    <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-center">
+                                        {t("action")}
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {virtualizer.getVirtualItems().length > 0 && (
+                                    <TableRow style={{ height: `${virtualizer.getVirtualItems()[0].start}px` }} className="hover:bg-transparent" />
+                                )}
+                                {virtualizer.getVirtualItems().map((virtualRow) => (
+                                    <BillRow
+                                        key={virtualRow.key}
+                                        item={itemsList[virtualRow.index]}
+                                        onUpdate={updateItem}
+                                        onSelectItem={selectItem}
+                                        onRemove={removeItem}
+                                        canRemove={itemsList.length > 1}
+                                        t={t}
+                                        isRTL={isRTL}
+                                        availableItems={availableItems}
+                                    />
+                                ))}
+                                {virtualizer.getVirtualItems().length > 0 && (
+                                    <TableRow
+                                        style={{
+                                            height: `${virtualizer.getTotalSize() - virtualizer.getVirtualItems()[virtualizer.getVirtualItems().length - 1].end}px`,
+                                        }}
+                                        className="hover:bg-transparent"
+                                    />
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </div>
             </div>
-            <div className="space-y-10 bg-background dark:bg-background rounded-xl p-5">
-                <div className="flex items-center justify-between">
-                    <p className="text-sm text-muted-foreground select-none">{t("addMultipleItems")}</p>
-                    <Button onClick={addItem} variant="outline" size="sm">
-                        <Plus className="h-4 w-4 me-2" />
-                        {t("addItem")}
-                    </Button>
-                </div>
-                <div ref={scrollRef} className="max-h-100 overflow-auto relative">
-                    <Table>
-                        <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
-                            <TableRow>
-                                <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
-                                    {t("item")}
-                                </TableHead>
-                                <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
-                                    {t("companyName")}
-                                </TableHead>
-                                <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
-                                    {t("quantity")}
-                                </TableHead>
-                                <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
-                                    {t("price")}
-                                </TableHead>
-                                <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-start">
-                                    {t("totalPrice")}
-                                </TableHead>
-                                <TableHead className="py-3 px-4 text-sm font-medium text-muted-foreground select-none text-center">
-                                    {t("action")}
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {virtualizer.getVirtualItems().length > 0 && (
-                                <TableRow style={{ height: `${virtualizer.getVirtualItems()[0].start}px` }} className="hover:bg-transparent" />
-                            )}
-                            {virtualizer.getVirtualItems().map((virtualRow) => (
-                                <BillRow
-                                    key={virtualRow.key}
-                                    item={itemsList[virtualRow.index]}
-                                    onUpdate={updateItem}
-                                    onRemove={removeItem}
-                                    canRemove={itemsList.length > 1}
-                                    t={t}
-                                    isRTL={isRTL}
-                                    availableItems={availableItems}
-                                />
-                            ))}
-                            {virtualizer.getVirtualItems().length > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: `${virtualizer.getTotalSize() - virtualizer.getVirtualItems()[virtualizer.getVirtualItems().length - 1].end}px`,
-                                    }}
-                                    className="hover:bg-transparent"
-                                />
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-            </div>
-        </div>
-    </CardContent>
-</Card>
-)
+        </CardContent>
+    </Card>
+    )
 }

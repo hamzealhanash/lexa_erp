@@ -5,6 +5,8 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
     const [settings, setSettings] = useState<UserSettings>({
+        profilePicture: undefined,
+        email: "",
         username: "User",
         theme: "dark",
         language: "en"

@@ -19,6 +19,12 @@
     "!node_modules/lightningcss-linux-*/**",
     "!node_modules/lightningcss-win32-arm64-msvc/**"
   ],
+  "publish": {
+    "provider": "github",
+    "owner": "hamzealhanash",
+    "repo": "lexa_erp",
+    "releaseType": "draft"
+  },
   "directories": {
     "output": "release"
   },
@@ -28,8 +34,8 @@
   "win": {
     "icon": "build/icon.png",
     "target": [
-      "msi",
-      "portable"
+      "nsis",
+      "msi"
     ]
   },
   "linux": {

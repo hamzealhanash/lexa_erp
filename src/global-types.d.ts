@@ -14,6 +14,7 @@ export type item = {
 export type billRow = {
     item: item;
     onUpdate: (id: number | string, field: keyof item, value: string | number) => void;
+    onSelectItem: (id: number | string, selected: Partial<item>) => void;
     onRemove: (id: number | string) => void;
     canRemove: boolean;
     t: (key: TranslationKey) => string;
@@ -65,9 +66,11 @@ export type TranslationContext = {
 export type Language = "en" | "ar"
 
 export interface UserSettings {
+    profilePicture: string | undefined
+    email: string
     username: string
     theme: 'light' | 'dark'
-    language: Language;
+    language: Language
 }
 
 export type SettingsContextType = {
@@ -163,6 +166,13 @@ export interface IBillRepository extends IBaseRepository<Bill, number> { }
 export interface ICollectionRepository extends IBaseRepository<Collection, number> { }
 export interface IPurchaseRepository extends IBaseRepository<Purchase, number> { }
 
+export type UpdateStatus =
+    | { status: "up-to-date"; currentVersion: string }
+    | { status: "update-available"; currentVersion: string; latestVersion: string; releaseNotes?: string }
+    | { status: "downloading"; percent: number }
+    | { status: "downloaded"; latestVersion: string }
+    | { status: "error"; message: string };
+
 declare global {
     interface Window {
         electron: {
@@ -190,6 +200,13 @@ declare global {
             // Settings
             getSettings: () => Promise<UserSettings>;
             setSetting: (key: string, value: any) => Promise<boolean>;
+            chooseAndSaveProfilePicture: () => Promise<string | null>;
+            getAppVersion: () => Promise<string>;
+            // Updates
+            checkForUpdates: () => Promise<UpdateStatus>;
+            downloadUpdate: () => Promise<UpdateStatus>;
+            installUpdate: () => void;
+            onUpdateDownloadProgress: (callback: (progress: { percent: number; transferred: number; total: number }) => void) => void;
             // Shortcuts
             onTabChange: (callback: (tab: string) => void) => void;
             // Dev

@@ -1,73 +1,106 @@
-# React + TypeScript + Vite
+# Lexa ERP <img src="build/icon.png" width="32" height="32" />
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Lexa ERP** is a modern, high-performance desktop Enterprise Resource Planning (ERP) application built with **Electron**, **React**, and **SQLite**. It provides a robust solution for managing inventory, sales, billing, and collections with a focus on speed, security, and an exceptional user experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Key Features
 
-## React Compiler
+- **📦 Inventory Management**: Track items, manage categories, and handle records with precision.
+- **🧾 Billing & Sales**: Quick bill generation, purchase tracking, and detailed sales analytics.
+- **💳 Collection Tracking**: Manage payments, monitor delivery statuses, and track remaining balances.
+- **📈 Catalog & Contracts**: Organize companies and manage percentage-based contracts seamlessly.
+- **🔒 Secure by Design**: Database encryption using **SQLCipher** (via `better-sqlite3-multiple-ciphers`) with machine-specific keys.
+- **🗄️ Modular DataBase**: The database is built with a modular architecture that allows for easy addition of new tables and columns.
+- **🌍 Localization**: Full support for **English** and **Arabic** (RTL) out of the box.
+- **🌓 Adaptive Theme**: Sleek Dark and Light modes using modern design principles.
+- **🖨️ Thermal Printing**: Direct integration with POS printers for instant receipts.
+- **🔄 Auto-Updater**: Built-in service to ensure the application is always up-to-date.
+- **⌨️ Global Shortcuts**: Power-user navigation with customizable keyboard shortcuts.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Frontend
+- **Framework**: [React 19](https://react.dev/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **UI Components**: [Shadcn UI](https://ui.shadcn.com/), [Base UI](https://base-ui.com/)
+- **Data Management**: [TanStack Table](https://tanstack.com/table) & [Virtual](https://tanstack.com/virtual)
+- **Icons**: [Lucide React](https://lucide.dev/)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Backend / Desktop
+- **Runtime**: [Electron](https://www.electronjs.org/)
+- **Database**: [SQLite](https://sqlite.org/) (Encrypted with SQLCipher)
+- **State**: `electron-store` for persistent settings.
+- **Printing**: `electron-pos-printer`
+- **Updates**: `electron-updater`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (Latest LTS recommended)
+- [pnpm](https://pnpm.io/) (Preferred package manager but you can use npm or yarn)
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/hamzealhanash/lexa_erp.git
+   cd lexa_erp
+   ```
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Start development mode:
+   ```bash
+   pnpm dev
+   ```
+
+### Building for Production
+To package the app for your operating system:
+```bash
+# Windows
+pnpm build:win
+
+# macOS
+pnpm build:mac
+
+# Linux
+pnpm build:linux
+
+# All platforms
+pnpm build:All
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-ui-x'
-import reactDom from 'eslint-plugin-ui-dom'
+## 📁 Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+lexa_erp/
+├── src/
+│   ├── electron/        # Main process, IPC handlers, Services (DB, Printer, etc.)
+│   ├── frontend/        # React components, Pages, Hooks, Libs
+│   └── global-types.d.ts # Shared TypeScript definitions
+├── electron-builder.yml # Electron builder configuration
+├── vite.config.ts       # Vite & Electron integration config
+└── package.json         # Scripts and dependencies
 ```
+
+---
+
+## 🛡️ Security
+The application uses **safeStorage** and **SQLCipher** to ensure that data is encrypted uniquely per machine. This prevents unauthorized access to the database files on the disk.
+
+---
+
+## 📄 License
+*Add license information here or contact me for details.*
+
+---
+
+**Lexa ERP** - *Engineering Efficiency for the Modern Enterprise.*

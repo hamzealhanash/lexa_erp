@@ -394,5 +394,117 @@
   "billPrintedError": {
     "en": "Error printing bill.",
     "ar": "خطأ في طباعة الفاتورة."
+  },
+  "storeName": {
+    "en": "Store Name",
+    "ar": "اسم المحل"
+  },
+  "editProfile": {
+    "en": "Edit Profile",
+    "ar": "تعديل الملف الشخصي"
+  },
+  "updatePersonalInfo": {
+    "en": "Update your personal info",
+    "ar": "تحديث معلوماتك الشخصية"
+  },
+  "privacyAndSecurity": {
+    "en": "Privacy & Security",
+    "ar": "الخصوصية والأمان"
+  },
+  "password2FAandMore": {
+    "en": "Password, 2FA, and more",
+    "ar": "كلمة المرور، المصادقة الثنائية، والمزيد"
+  },
+  "appearance": {
+    "en": "Appearance",
+    "ar": "المظهر"
+  },
+  "themeAndDisplaySettings": {
+    "en": "Theme and display settings",
+    "ar": "إعدادات المظهر والعرض"
+  },
+  "helpAndSupport": {
+    "en": "Help & Support",
+    "ar": "المساعدة والدعم"
+  },
+  "getHelpOrContactUs": {
+    "en": "Get help or contact us",
+    "ar": "احصل على المساعدة أو اتصل بنا"
+  },
+  "close": {
+    "en": "Close",
+    "ar": "إغلاق"
+  },
+  "save": {
+    "en": "Save",
+    "ar": "حفظ"
+  },
+  "cancel": {
+    "en": "Cancel",
+    "ar": "إلغاء"
+  },
+  "profilePicture": {
+    "en": "Profile Picture",
+    "ar": "صورة الملف الشخصي"
+  },
+  "username": {
+    "en": "Username",
+    "ar": "اسم المستخدم"
+  },
+  "email": {
+    "en": "Email",
+    "ar": "البريد الإلكتروني"
+  },
+  "chooseProfilePicture": {
+    "en": "Choose Profile Picture",
+    "ar": "اختر صورة الملف الشخصي"
+  },
+  "theme": {
+    "en": "Theme",
+    "ar": "المظهر"
+  },
+  "darkTheme": {
+    "en": "Dark Theme",
+    "ar": "المظهر الداكن"
+  },
+  "language": {
+    "en": "Language",
+    "ar": "اللغة"
+  },
+  "changeLanguage": {
+    "en": "Change Language",
+    "ar": "تغيير اللغة"
+  },
+  "backToMenu": {
+    "en": "Back to Main Menu",
+    "ar": "العودة إلى القائمة الرئيسية"
+  },
+  "checkForUpdates": {
+    "en": "Check for Updates",
+    "ar": "التحقق من التحديثات"
+  },
+  "youAreAllUpdated": {
+    "en": "You are all updated!",
+    "ar": "أنت على آخر تحديث"
+  },
+  "youAreOnVersion": {
+    "en": "You are running version",
+    "ar": "أنت تستخدم إصدار"
+  },
+  "errorCheckingForUpdates": {
+    "en": "Error checking for updates",
+    "ar": "خطأ في التحقق من التحديثات"
+  },
+  "checkingForUpdates": {
+    "en": "Checking for updates...",
+    "ar": "جاري التحقق من التحديثات..."
+  },
+  "downloadingUpdate": {
+    "en": "Downloading update",
+    "ar": "جاري تحميل التحديث"
+  },
+  "installRestart": {
+    "en": "Restart to Install",
+    "ar": "إعادة التشغيل للتثبيت"
   }
 }

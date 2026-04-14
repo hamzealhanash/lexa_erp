@@ -43,7 +43,7 @@ export function getDbEncryptionKey(): string {
     if (!safeStorage.isEncryptionAvailable()) {
         throw new Error(
             'Electron safeStorage is not available. Cannot securely store the database encryption key.'
-        );
+        )
     }
 
     // If a key file already exists, read and decrypt it

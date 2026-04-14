@@ -1,14 +1,51 @@
+import path from 'path'
 import { defineConfig } from 'vite'
+import { fileURLToPath } from 'url'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import electron from 'vite-plugin-electron/simple'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    electron({
+      main: {
+        entry: 'src/electron/main.ts',
+        vite: {
+          build: {
+            outDir: 'dist/electron',
+            rollupOptions: {
+              external: [
+                'better-sqlite3-multiple-ciphers',
+                'electron-store',
+                'electron-updater',
+                'electron-pos-printer'
+              ],
+              output: {
+                preserveModules: true,
+                preserveModulesRoot: 'src/electron',
+              },
+            },
+          },
+        },
+      },
+      preload: {
+        input: 'src/electron/preLoad.ts',
+        vite: {
+          build: {
+            outDir: 'dist/electron',
+            rollupOptions: {
+              output: {
+                format: 'cjs',
+                entryFileNames: '[name].cjs',
+              },
+            },
+          },
+        },
+      },
+    }),
     react({
       babel: {
         plugins: [
@@ -32,7 +69,7 @@ export default defineConfig({
   build: {
     outDir: 'dist/frontend',
   },
-  server : {
+  server: {
     port: 5173,
     strictPort: true,
   }

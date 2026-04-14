@@ -18,7 +18,7 @@ export default async function printBill(data: bill) {
                 [
                     {
                         type: 'image',
-                        path: path.join(app.getAppPath(), 'src/electron/services/printer/resources/icon.png'),
+                        path: path.join(import.meta.dirname, 'resources/icon.png'),
                         width: '28px',
                         height: '28px',
                         style: { filter: 'grayscale(100%)' }
