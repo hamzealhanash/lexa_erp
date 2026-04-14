@@ -19,9 +19,11 @@ export class UpdateService {
             provider: "github",
             owner: "hamzealhanash",
             repo: "lexa_erp",
+            private: true,
+            token: process.env.GITHUB_TOKEN,
         })
     }
-    
+
     /**
      * Check for updates. Returns either "up-to-date" or "update-available" with version info.
      */

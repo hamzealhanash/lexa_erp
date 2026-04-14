@@ -20,6 +20,10 @@ tests/
 *.local
 .pnpm-*
 .to-do.md
+.env
+PUBLISHING_GUIDE.md
+
+
 
 # Editor directories and files
 cert/

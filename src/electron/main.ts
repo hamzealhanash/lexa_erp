@@ -20,6 +20,14 @@ function init() {
     }
 
 }
+process.on('message', (msg) => {
+  if (msg === 'electron-vite&type=hot-reload') {
+    for (const win of BrowserWindow.getAllWindows()) {
+      // Hot reload preload scripts
+      win.webContents.reload()
+    }
+  }
+})
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({

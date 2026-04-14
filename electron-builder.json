@@ -1,7 +1,5 @@
 {
   "appId": "com.lexa.erp",
-  "cscLink": "./cert/code-sign.pfx",
-  "cscKeyPassword": "1234",
   "files": [
     "dist/electron",
     "dist/backend",
@@ -33,9 +31,9 @@
   },
   "win": {
     "icon": "build/icon.png",
+    "forceCodeSigning": false,
     "target": [
-      "nsis",
-      "msi"
+      "nsis"
     ]
   },
   "linux": {
