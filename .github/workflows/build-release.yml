@@ -42,4 +42,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm run build
-          pnpx electron-builder --publish always
+          pnpm exec electron-builder --publish always
