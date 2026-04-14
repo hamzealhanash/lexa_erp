@@ -16,29 +16,30 @@ jobs:
       
     strategy:
       matrix:
-        # Note: macos-latest is now ARM-based (M1/M2). 
-        # Use macos-13 if you specifically need Intel builds.
         os: [windows-latest, ubuntu-latest, macos-latest]
         
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9 # Matches your local pnpm version
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # This will look specifically for package-lock.json
-          # cache: 'npm'
+          # We use pnpm for caching to make builds faster
+          # cache: 'pnpm'
 
       - name: Install Dependencies
-        # 'npm ci' is preferred for CI/CD as it ensures 
-        # a clean install exactly matching your lockfile.
-        run: npm install
+        run: pnpm install
 
       - name: Build and Publish Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run build
-          npx electron-builder --publish always
+          pnpm run build
+          pnpx electron-builder --publish always
