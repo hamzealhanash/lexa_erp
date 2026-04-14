@@ -56,12 +56,5 @@ contextBridge.exposeInMainWorld('electron', {
     // Shortcuts
     onTabChange: (callback: (tab: string) => void) => {
         ipcRenderer.on('on-tab-change', (_event, tab) => callback(tab));
-    },
-
-    /*
-    * ─────────────────────────────────────────────
-    *                     @Development
-    * ─────────────────────────────────────────────
-    */
-    injectSampleData: () => ipcRenderer.invoke('injectSampleData'),
+    }
 });

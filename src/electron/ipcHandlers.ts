@@ -10,7 +10,6 @@ import printBill from './services/printer/printService.js'
 import { SettingsService } from './services/settingsService.js'
 import { UpdateService } from './services/updaterService.js'
 import { isDev } from "./utils.js"
-import { sampleData } from '../tests/seed.js'
 import { getDb } from './services/dataBase/connection.js'
 
 const settingsService = new SettingsService()
@@ -69,9 +68,4 @@ export function configuringIPC() {
         updateService.installUpdate();
     });
 
-    if (isDev()) {
-        ipcMain.handle('injectSampleData', async () => {
-            getDb().exec(sampleData)
-        })
-    }
 }
