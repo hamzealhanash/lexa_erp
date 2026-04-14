@@ -22,7 +22,8 @@ tests/
 .to-do.md
 .env
 PUBLISHING_GUIDE.md
-
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 
 # Editor directories and files
