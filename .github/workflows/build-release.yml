@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies
         # 'npm ci' is preferred for CI/CD as it ensures 
         # a clean install exactly matching your lockfile.
-        run: npm ci
+        run: npm install
 
       - name: Build and Publish Release
         env:
